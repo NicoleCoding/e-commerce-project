@@ -2,14 +2,11 @@ let basketElem = document.getElementById("shopping-basket"); // Container for th
 let checkoutMessageElem = document.getElementById("checkout-message"); // Container for checkout message.
 let backToProductsElem = document.getElementById("back-to-products"); // Container for the link to go back to product page.
 
-
-
-
 // Generates the items which are added in the basket.
 function generateBasketItems() {
   if (basket.length !== 0) {  // If the length of the basket array is not 0, items inside the basket page are generated.
     return (basketElem.innerHTML = basket.map((x) => { // New array generated containing x and the new array displayed inside the basket container.
-      let { id, quantity } = x; // Destructuring the object x.
+      let { id, quantity } = x; 
       let search = products.find((y) => y.id === id) || []; // Search an item with id in basket. Otherwise return an empty array if nothing found.
       return `
           <div class="basket-item">
@@ -31,21 +28,23 @@ function generateBasketItems() {
 
 }
 
-generateBasketItems();
+function findItemInBasket(idToFind) {
+  return basket.find((item) => item.id === idToFind);
+}
 
 // Function to increment the items in basket
 function incrementProductsInBasket(id) {
-  let selectedItem = id; // Variable for item being selected.
-  let search = basket.find((x) => x.id === selectedItem.id); // Searches for item with specific id inside basket.
+  let selectedItem = id; 
+  let foundItem = findItemInBasket(selectedItem.id);
 
-  if (search === undefined) { 
+  if (foundItem === undefined) { 
     basket.push({ // If no item with specific id found, item is added into basket.
       id: selectedItem.id,
       quantity: 1,
     });
   }
   else {
-    search.quantity += 1; // If item with specific id exists, increase quantity by 1.
+    foundItem.quantity += 1; // If item with specific id exists, increase quantity by 1.
   }
 
   generateBasketItems();
@@ -55,14 +54,14 @@ function incrementProductsInBasket(id) {
 // Function for the decrement button in the basket. Works the same way as the increment function; however it also checks if quantity is equal to 0 and it that case, nothing happens.
 function decrementProductsInBasket(id) {
   let selectedItem = id;
-  let search = basket.find((x) => x.id === selectedItem.id);
+  let foundItem = findItemInBasket(selectedItem.id);
 
-  if (search === undefined)
+  if (foundItem === undefined)
     return;
-  else if (search.quantity === 0)
+  else if (foundItem.quantity === 0)
     return; // Nothing happens, meaning the quantity cannot be decreased once value of quantity is 0.
   else {
-    search.quantity -= 1;
+    foundItem.quantity -= 1;
   }
 
   basket = basket.filter((x) => x.quantity !== 0);
@@ -95,9 +94,7 @@ function totalAmount() {
   }
   else
     return; // Nothing happens if basket length is 0.
-
-
 }
 
 
-  
+generateBasketItems();
