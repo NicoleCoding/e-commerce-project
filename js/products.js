@@ -33,9 +33,9 @@ let basket = JSON.parse(localStorage.getItem("data")) || []; // Items which were
 
 // Displays products on the webpage.
 function renderProducts() {
-  return (productsElem.innerHTML = products.map((x) => { // Creates a new array for every object in products and the new array is displayed inside the productsElem.
-    let { id, name, price, description, image } = x; // Destructuring the object.
-    let search = basket.find((x) => x.id === id) || []; // Search an item with id in basket. Otherwise return an empty array if nothing found.
+  return (productsElem.innerHTML = products.map((product) => { // Creates a new array for every object in products and the new array is displayed inside the productsElem.
+    let { id, name, price, description, image } = product; // Destructuring the object.
+    let searchProduct = basket.find((product) => product.id === id) || []; // Search an item with id in basket. Otherwise return an empty array if nothing found.
     return `<div id=product-id-${id} class="item">
               <img width="250" height="250" src=${image} alt="">
               <div class="details">
@@ -46,7 +46,7 @@ function renderProducts() {
                   <div class="buttons">
                     <i onclick="decrementProduct(${id})" class="bi bi-dash-lg">Remove item from basket</i> 
                    <div id=${id} class="quantity">
-                     ${search.quantity === undefined ? 0 : search.quantity}
+                     ${searchProduct.quantity === undefined ? 0 : searchProduct.quantity}
                    </div>
                    <i onclick="incrementProduct(${id})" class="bi bi-plus-lg">Add item to basket</i>
                  </div>
@@ -63,14 +63,14 @@ renderProducts();
 // Increase the quantity of the product.
 function incrementProduct(id) {
   let selectedItem = id; // Variable for the item which is being selected.
-  let search = basket.find((x) => x.id === selectedItem.id); // Tries to find an item with a specific id in the basket.
-  if (search === undefined) { 
+  let searchProduct = basket.find((product) => product.id === selectedItem.id); // Tries to find an item with a specific id in the basket.
+  if (searchProduct === undefined) { 
     basket.push({             // If the search determines that an item does not exist in the basket yet, it will push a new object inside the basket.
       id: selectedItem.id,
       quantity: 1,
     });
   } else { 
-    search.quantity += 1;  // If the item already exists, the quantity is increased by 1.
+    searchProduct.quantity += 1;  // If the item already exists, the quantity is increased by 1.
   }
 
 
@@ -82,16 +82,16 @@ function incrementProduct(id) {
 // Decrease the quantity of the product, works the same way as the increment function but in reverse. Also if the quantity is 0, nothing happens.
 function decrementProduct(id) {
   let selectedItem = id;
-  let search = basket.find((x) => x.id === selectedItem.id);
-  if (search === undefined)
+  let searchProduct = basket.find((product) => product.id === selectedItem.id);
+  if (searchProduct === undefined)
     return;
-  else if (search.quantity === 0) // Nothing happens if quantity is equal to 0.
+  else if (searchProduct.quantity === 0) // Nothing happens if quantity is equal to 0.
     return;
   else {
-    search.quantity -= 1;
+    searchProduct.quantity -= 1;
   }
   updateBasketIcon(selectedItem.id); 
-  basket = basket.filter((x) => x.quantity !== 0); // Filters the objects inside the basket which do not have a quantity of 0 and these are passed inside an array.
+  basket = basket.filter((basketItem) => basketItem.quantity !== 0); // Filters the objects inside the basket which do not have a quantity of 0 and these are passed inside an array.
   localStorage.setItem("data", JSON.stringify(basket)); 
 
 
@@ -99,15 +99,15 @@ function decrementProduct(id) {
 
 // Updates the basket icon on the productpage.
 function updateBasketIcon(id) {
-  let search = basket.find((x) => x.id === id);
-  document.getElementById(id).innerHTML = search.quantity; // Element with id "id" displays the quantity of all products inside the basket.
+  let searchProduct = basket.find((product) => product.id === id);
+  document.getElementById(id).innerHTML = searchProduct.quantity; // Element with id "id" displays the quantity of all products inside the basket.
   calculationBasketIcon(); // Runs the calculation of all added products.
 }
 
 // Calculates quantity of the items in the basket which are displayed at the basket icon.
 function calculationBasketIcon() {
   let basketAmount = document.getElementById("basketAmount"); // The basket icon is declared and assigned to the element with id "basketAmount".
-  basketAmount.innerHTML = basket.map((x) => x.quantity).reduce((x, y) => x + y, 0); // Create an array with only the quantities of the products inside the basket, then all the quantities are summed up with the reduce function and this is displayed inside the basketIcon element.
+  basketAmount.innerHTML = basket.map((basketItem) => basketItem.quantity).reduce((totalQuantity, itemQuantity) => totalQuantity + itemQuantity, 0); // Create an array with only the quantities of the products inside the basket, then all the quantities are summed up with the reduce function and this is displayed inside the basketIcon element.
 
 }
 

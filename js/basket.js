@@ -1,18 +1,18 @@
-let basketElem = document.getElementById("shopping-basket"); // Container for the items inside the basket.
+let basketElem = document.getElementById("shopping-basket"); // Container for the basket items.
 let checkoutMessageElem = document.getElementById("checkout-message"); // Container for checkout message.
 let backToProductsElem = document.getElementById("back-to-products"); // Container for the link to go back to product page.
 
 // Generates the items which are added in the basket.
 function generateBasketItems() {
   if (basket.length !== 0) {  // If the length of the basket array is not 0, items inside the basket page are generated.
-    return (basketElem.innerHTML = basket.map((x) => { // New array generated containing x and the new array displayed inside the basket container.
-      let { id, quantity } = x; 
-      let search = products.find((y) => y.id === id) || []; // Search an item with id in basket. Otherwise return an empty array if nothing found.
+    return (basketElem.innerHTML = basket.map((basketItem) => { // New array generated containing basket items which are contained inside the basket container.
+      let { id, quantity } = basketItem; 
+      let searchProduct = products.find((product) => product.id === id) || []; // Search a product  with id in basket. Otherwise return an empty array if nothing found.
       return `
           <div class="basket-item">
-            <img width="100" src=${search.image} alt="" />
+            <img width="100" src=${searchProduct.image} alt="" />
             <div class="details">
-              <p>${search.name}</p>
+              <p>${searchProduct.name}</p>
               <p class="cart-item-price">Price per item: ${search.price}:-</p>
             </div>
             <div class="buttons">
@@ -29,7 +29,7 @@ function generateBasketItems() {
 }
 
 function findItemInBasket(idToFind) {
-  return basket.find((item) => item.id === idToFind);
+  return basket.find((basketItem) => basketItem.id === idToFind);
 }
 
 // Function to increment the items in basket
@@ -64,7 +64,7 @@ function decrementProductsInBasket(id) {
     foundItem.quantity -= 1;
   }
 
-  basket = basket.filter((x) => x.quantity !== 0);
+  basket = basket.filter((basketItem) => basketItem.quantity !== 0);
   generateBasketItems();
   localStorage.setItem("data", JSON.stringify(basket));
 
@@ -82,12 +82,12 @@ function clearBasket() {
 // Function which calculates the total sum.
 function totalAmount() {
   if (basket.length !== 0) { 
-    let sum = basket.map((x) => { 
-      let { quantity, id } = x; // Destructure the x to get the quantity and id of the object which is x.
-      let search = products.find((y) => y.id === id) || []; // Search an item with id in basket. Otherwise return an empty array if nothing found.
+    let sum = basket.map((basketItem) => { 
+      let { quantity, id } = basketItem; // Destructure the x to get the quantity and id of the object which is x.
+      let searchProduct = products.find((product) => product.id === id) || []; // Search a product with id in basket. Otherwise return an empty array if nothing found.
 
-      return quantity * search.price; // Returns the total sum of each product.
-    }).reduce((x, y) => x + y, 0); // All objects inside the array are summarized to get the total sum of all products.
+      return quantity * searchProduct.price; // Returns the total sum of each product.
+    }).reduce((basketItem, product) => basketItem + product, 0); // All objects inside the array are summarized to get the total sum of all products.
 
     
     checkoutMessageElem.innerHTML = `<h2>The total sum is ${sum}</h2>`; // Write out the total sum to the user inside the specified container.
