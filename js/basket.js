@@ -13,7 +13,7 @@ function generateBasketItems() {
             <img width="100" src=${searchProduct.image} alt="" />
             <div class="details">
               <p>${searchProduct.name}</p>
-              <p class="cart-item-price">Price per item: ${search.price}:-</p>
+              <p class="cart-item-price">Price per item: ${searchProduct.price}:-</p>
             </div>
             <div class="buttons">
               <i onclick="decrementProductsInBasket(${id})" class="bi bi-dash-lg"></i>
