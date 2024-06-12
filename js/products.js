@@ -36,19 +36,23 @@ function renderProducts() {
   return (productsElem.innerHTML = products.map((product) => { // Creates a new array for every object in products and the new array is displayed inside the productsElem.
     let { id, name, price, description, image } = product; // Destructuring the object.
     let searchProduct = basket.find((product) => product.id === id) || []; // Search an item with id in basket. Otherwise return an empty array if nothing found.
-    return `<div id=product-id-${id} class="item">
+    return `<div id=product-id-${id} class="item m-2">
               <img width="250" height="250" src=${image} alt="">
               <div class="details">
                 <h3>${name}</h3>
                 <p>${description}</p>
                 <div class="price-quantity">
                   <h2>${price}:- </h2>
-                  <div class="buttons">
-                    <i onclick="decrementProduct(${id})" class="bi bi-dash-lg">Remove item from basket</i> 
+                  <div class="btn-group" role="group" aria-label="Quantity-buttons">
+                  <button type="button" class="btn btn-primary px-2 m-2">
+                   <i onclick="incrementProduct(${id})" class="bi bi-plus-lg">Add item to basket</i>
+                  </button>
                    <div id=${id} class="quantity">
                      ${searchProduct.quantity === undefined ? 0 : searchProduct.quantity}
                    </div>
-                   <i onclick="incrementProduct(${id})" class="bi bi-plus-lg">Add item to basket</i>
+                  <button type="button" class="btn btn-primary px-2 m-2">
+                    <i onclick="decrementProduct(${id})" class="bi bi-dash-lg">Remove item from basket</i>
+                  </button>
                  </div>
                 </div>
               </div>
